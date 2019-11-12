@@ -21,7 +21,7 @@ exports.validarToken = function (req, res, next) {
         } else {
             var data = JSON.parse(body);
             if (response.statusCode == 200) {
-                next();
+                return;
             }
             else {
                 var err = new Error(data.error || 'error no especificado');
@@ -35,7 +35,7 @@ exports.validarToken = function (req, res, next) {
 };
 
 exports.contadorRequest = function (req, res, next) {
-    next();
+    return;
    /**
     * @TODO falta codigo
     */
@@ -56,7 +56,7 @@ exports.isAdmin = function (req, res, next) {
             var data = JSON.parse(body);
             if (response.statusCode == 200) {
                 if (data.admin) {
-                    next();
+                    return;
                 } else {
                     var err = new Error('Debe ser administrador para realizar esta acción');
                     err.code = 401;

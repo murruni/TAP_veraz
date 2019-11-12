@@ -12,7 +12,7 @@ var mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 
 // Usamos el método connect para conectarnos a nuestra base de datos
-mongoose.connect(`mongodb+srv://${MONGO_USR}:${MONGO_PASS}@${MONGO_URL}/${MONGO_DB}`
+mongoose.connect(`mongodb+srv://${MONGO_USR}:${MONGO_PASS}@${MONGO_URL}/${MONGO_DB}?retryWrites=true&w=majority`
     , { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => {
         console.log("La conexión a la base de datos se ha realizado correctamente")
