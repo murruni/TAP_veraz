@@ -4,7 +4,7 @@ var bodyParser = require('body-parser');
 var express = require('express');
 var app = express();
 
-const my_middlewares = require('./middlewares');
+const myMiddlewares = require('./middlewares');
 
 // middlewares compress all responses & parse application/json
 app.use(compression());
@@ -16,7 +16,8 @@ app.use((req, res, next) => {
     next();
 });
 
-app.use(my_middlewares.validarToken);
+// ni bien entra a la aplicacion, valido que sea un usuario logueado
+app.use(myMiddlewares.validarToken);
 
 // middleware api routes
 app.use('/', require('./veraz.route'));
