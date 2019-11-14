@@ -9,28 +9,31 @@ const myMiddlewares = require('./middlewares');
 // middlewares compress all responses & parse application/json
 app.use(compression());
 app.use(bodyParser.json());
-/*
+
 // middleware log to console all request
 app.use((req, res, next) => {
-    console.log(`${req.method}: ${req.path}`);
+    console.log(`${req.method}: ${req.path} ${JSON.stringify(req.query)} ${JSON.stringify(req.body)}`);
     next();
 });
-*/
+
 // ni bien entra a la aplicacion, valido que sea un usuario logueado
 app.use(myMiddlewares.validarToken);
 
 // middleware api routes
 app.use('/', require('./veraz.route'));
 
+
 // middleware for others routes and verbs
 app.all('/*', function (req, res, next) {
-    res.status(501).send({ error: 'No implementado' });
-    return ;
+    var err = new Error('No implementado');
+    err.code = 501;
+    next(err);
 });
 
 // error handler
-app.use(function (err, req, res, next) {
-    return res.status(err.code || 500 ).send({ error: err.message });
+app.use((err, req, res, next) => {
+    console.log('error handler: ', err.message);
+    return res.status(err.code || 500).send({ error: err.message });
 });
 
 module.exports = app;
