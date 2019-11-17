@@ -1,14 +1,15 @@
-FROM node:10
+FROM node:12.13.0
 
 WORKDIR /microservice
 
-COPY ./app/package.json        /microservice
-COPY ./app/index.js            /microservice
-COPY ./app/app.js              /microservice
-COPY ./app/veraz.controller.js /microservice
-COPY ./app/middlewares.js      /microservice
-COPY ./app/veraz.route.js      /microservice
-COPY ./app/veraz.model.js      /microservice
+COPY ./app/package.json      /microservice
+COPY ./app/package-lock.json /microservice
+COPY ./app/index.js          /microservice
+COPY ./app/app.js            /microservice
+COPY ./app/controllers       /microservice/controllers
+COPY ./app/utils             /microservice/utils
+COPY ./app/routes            /microservice/routes
+COPY ./app/models            /microservice/models
 
 ENV GATEWAY_PORT=3000;
 ENV GATEWAY_HOST='localhost';

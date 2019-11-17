@@ -7,7 +7,7 @@ let VerazSchema = new Schema({
     cuil: { type: Number, unique: true }
     , status: Number
 });
-VerazSchema.plugin(uniqueValidator, { message: 'Error: {PATH} ya existe en la base.' });
+VerazSchema.plugin(uniqueValidator, { message: '{PATH} ya existe en la base.' });
 
 // Export the model
 module.exports = mongoose.model('Veraz', VerazSchema);

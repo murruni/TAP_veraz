@@ -6,9 +6,14 @@
   "dependencies": {
     "body-parser": "^1.19.0",
     "compression": "^1.7.4",
-    "express": "^4.17.0",
-    "mongoose": "^5.5.9",
+    "express": "^4.17.1",
+    "mongoose": "^5.7.11",
+    "mongoose-unique-validator": "^2.0.3",
     "request": "^2.88.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/murruni/TAP_veraz.git"
   },
   "author": "Pablo Murruni <murruni@gmail.com>",
   "license": "ISC"

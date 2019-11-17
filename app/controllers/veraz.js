@@ -1,9 +1,7 @@
-const myMiddlewares = require('./middlewares');
-const Veraz = require('./veraz.model');
+const Veraz = require('../models/veraz');
+const ErrorHandler = require('../utils/error');
 
 exports.get = (req, res, next) => {
-    myMiddlewares.contadorRequest(req, res, next);
-
     let cuil = req.params.cuil;
     if (!cuil) return next(new ErrorHandler(400, 'Faltan parametros. Cuil es necesario.'));
 
@@ -12,27 +10,18 @@ exports.get = (req, res, next) => {
 
     var errorCuil = v.validaFormatoCuil();
     if (errorCuil) return next(new ErrorHandler(400, errorCuil));
-    try {
-        Veraz.findOne({ 'cuil': v.cuil }, function (err, data) {
-            if (err) {
-                if (err.name == 'CastError' && err.kind == 'ObjectId') {
-                    res.status(503).send('Servicio de base de datos no cdisponible');
-                }
-                return next(err);
-            }
-            res.status(200).send(data.formatoSalida());
-        })
-    } catch (error) {
-        console.log('error')
-        return next(error);
 
-    }
+    Veraz.findOne({ 'cuil': v.cuil }, function (err, data) {
+        if (err) {
+            if (err.name == 'CastError' && err.kind == 'ObjectId')
+                return next(new ErrorHandler(503, 'Servicio de base de datos no disponible'));
+            return next(err);
+        }
+        res.status(200).send(data.formatoSalida());
+    });
 };
 
 exports.getBulk = (req, res, next) => {
-    // req.body.
-
-    myMiddlewares.contadorRequest(req, res, next);
     var retList = [
         Object.assign({ 'cuil': '65465464' })
         , Object.assign({ 'cuil': '77777' })
@@ -42,8 +31,6 @@ exports.getBulk = (req, res, next) => {
 };
 
 exports.create = (req, res, next) => {
-    myMiddlewares.isAdmin(req, res, next);
-
     var v = new Veraz();
     v.cuil = parseInt(req.body.cuil);
     v.status = parseInt(req.body.status);
@@ -54,22 +41,15 @@ exports.create = (req, res, next) => {
     if (errorCuil) return next(new ErrorHandler(400, errorCuil));
 
     v.save(function (err) {
-        if (err) {
-            console.log('err.errors.cuil.message: ', err.errors.cuil.message);
-            //return new ErrorHandler(400, err.errors.cuil.message);
-            return next(new ErrorHandler(400, err.errors.cuil.message));
-        } else {
-            console.log('resultado: ', v.formatoSalida());
-            res.status(200).send(v.formatoSalida());
-            return;
-        }
+        if (err) return next(new ErrorHandler(400, err.errors.cuil.message));
+        res.status(200).send(v.formatoSalida());
     });
+
 };
 
-exports.update = (req, res, next) => {
-    myMiddlewares.isAdmin(req, res, next);
-
+exports.update = (req, res, next) => {    
     console.log('update');
+    return next();
 };
 
 
@@ -94,12 +74,4 @@ const validaFormatoCuil = function (cuil) {
     aux = aux == 11 ? 0 : aux == 10 ? 9 : aux;
 
     if (aux != cuil[10]) return 'Error con el dígito validador (debería ser ' + aux + ')';
-}
-
-class ErrorHandler extends Error {
-    constructor(statusCode, message) {
-        super();
-        this.statusCode = statusCode;
-        this.message = message;
-    }
 }
