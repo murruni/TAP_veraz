@@ -21,7 +21,7 @@ app.use((req, res, next) => {
 app.use(myMiddlewares.validarToken);
 
 // middleware api routes
-app.use('/', require('./routes/veraz'));
+app.use('/', require('./routes/routes'));
 
 // middleware for others routes and verbs
 app.all('/*', function (req, res, next) {
@@ -30,7 +30,7 @@ app.all('/*', function (req, res, next) {
 
 // error handler
 app.use((err, req, res, next) => {
-    res.status(err.code || 500).send({ error: (err.message || 'Error no especificado') });
+    res.status(err.statusCode || 500).send({ error: (err.message || 'Error no especificado') });
 });
 
 module.exports = app;

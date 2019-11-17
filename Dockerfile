@@ -12,7 +12,7 @@ COPY ./app/routes            /microservice/routes
 COPY ./app/models            /microservice/models
 
 ENV GATEWAY_PORT=3000;
-ENV GATEWAY_HOST='localhost';
+ENV GATEWAY_HOST='localhost'
 ENV TOKEN_PATH='/validate'
 ENV COUNTER_PATH='/count'
 ENV MONGO_URL='clustermongodb-1sv33.mongodb.net'

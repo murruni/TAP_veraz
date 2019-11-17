@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
 
-router.all('/veraz', requiere('./veraz'));
+router.all('/veraz', require('./veraz'));
 
 module.exports = router;

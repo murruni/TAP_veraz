@@ -15,12 +15,12 @@ exports.validarToken = function (req, res, next) {
 
     function callback(error, response, body) {
         if (error) return next(new ErrorHandler(500, 'Error de conexión al validador de usuarios'));
-        var data = JSON.parse(body);
         if (response.statusCode == 200) return next();
-        if (response.statusCode == 401) return next(new ErrorHandler(401, data.error));
+        if (response.statusCode == 401) return next(new ErrorHandler(401, (JSON.parse(body).error || '')));
+        if (response.statusCode == 503) return next(new ErrorHandler(500, 'Error de conexión al validador de usuarios'));
         return next(new ErrorHandler(500, 'Error no especificado'));
     }
-    request(options, callback);
+    return request(options, callback);
 };
 
 exports.contadorRequest = function (req, res, next) {
@@ -38,14 +38,15 @@ exports.isAdmin = function (req, res, next) {
 
     function callback(error, response, body) {
         if (error) return next(new ErrorHandler(500, 'Error de conexión al validador de usuario'));
-        var data = JSON.parse(body);
+        if (response.statusCode == 503) return next(new ErrorHandler(500, 'Error de conexión al validador de usuarios'));
+        if (response.statusCode == 401) return next(new ErrorHandler(401, (JSON.parse(body).error || '')));
         if (response.statusCode == 200) {
-            if (data.admin) return next();
-            return next(new ErrorHandler(500, 'Debe ser administrador para realizar esta acción'));
+            if (JSON.parse(body).admin) return next();
+            else return next(new ErrorHandler(500, 'Debe ser administrador para realizar esta acción'));
         }
         return next(new ErrorHandler(500, 'Error no especificado'));
     }
-    request(options, callback);
+    return request(options, callback);
 }
 
 class ErrorHandler extends Error {
