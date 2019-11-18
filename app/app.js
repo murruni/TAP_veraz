@@ -8,14 +8,12 @@ const myMiddlewares = require('./utils/middleware');
 const ErrorHandler = require('./utils/error');
 
 // middlewares compress all responses & parse application/json
+app.use(express.json());
 app.use(compression());
 app.use(bodyParser.json());
 
 // middleware log to console all request
-app.use((req, res, next) => {
-    console.log(`${req.method}: ${req.path} ${JSON.stringify(req.query)} ${JSON.stringify(req.body)}`);
-    next();
-});
+//app.use((req, res, next) => { console.log(`${req.method}: ${req.path} ${JSON.stringify(req.query)} ${JSON.stringify(req.body)}`); next(); });
 
 // ni bien entra a la aplicacion, valido que sea un usuario logueado
 app.use(myMiddlewares.validarToken);
