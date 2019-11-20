@@ -58,7 +58,7 @@ exports.isAdmin = function (req, res, next) {
         if (response.statusCode == 401) return next(new ErrorHandler(401, (JSON.parse(body).error || '')));
         if (response.statusCode == 200) {
             if (JSON.parse(body).admin) return next();
-            else return next(new ErrorHandler(500, 'Debe ser administrador para realizar esta acción'));
+            else return next(new ErrorHandler(401, 'Debe ser administrador para realizar esta acción'));
         }
         return next(new ErrorHandler(500, 'Error no especificado'));
     }
