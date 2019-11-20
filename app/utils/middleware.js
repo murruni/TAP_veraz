@@ -24,7 +24,10 @@ exports.validarToken = function (req, res, next) {
 };
 
 exports.contadorRequest = function (req, res, next) {
-    var cantReq = req.body.cuils.length;
+    var cantReq = 0;
+    if (req.body.cuils) cantReq = req.body.cuils.length;
+    if (req.params.cuil) cantReq = 1;
+
     if (cantReq <= 0) return next();
 
     var options = {

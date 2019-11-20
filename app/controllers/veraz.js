@@ -4,7 +4,6 @@ const ErrorHandler = require('../utils/error');
 exports.get = (req, res, next) => {
     let cuil = req.params.cuil;
     if (!cuil) return next(new ErrorHandler(400, 'Faltan parametros. Cuil es necesario.'));
-
     var v = new Veraz();
     v.cuil = parseInt(cuil);
 
@@ -18,8 +17,8 @@ exports.get = (req, res, next) => {
             return next(err);
         }
         if (data)
-            res.status(200).send(data);
-        res.status(200).send({ cuil: v.cuil, error: 'Cuil no encontrado' });
+            return res.status(200).send(data);
+        return res.status(200).send({ cuil: v.cuil, error: 'Cuil no encontrado' });
     });
 };
 
@@ -34,10 +33,11 @@ exports.getBulk = (req, res, next) => {
                 return next(new ErrorHandler(503, 'Servicio de base de datos no disponible'));
             return next(err);
         }
+
         let dataCuils = data.map(d => d.cuil);
         let noCuils = cuils.filter(el => !dataCuils.includes(el));
         noCuils.forEach(c => data.push({ 'cuil': c, 'error': 'Cuil no encontrado' }));
-        res.status(200).send(data);
+        return res.status(200).send(data);
     });
 };
 
